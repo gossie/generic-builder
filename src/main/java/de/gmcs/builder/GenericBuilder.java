@@ -4,6 +4,12 @@ import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * The {@link GenericBuilder} is capable of creating and building instances.
+ *
+ * @param <T>
+ *            The type of the class to be built.
+ */
 public class GenericBuilder<T> {
 
     private T instance;
@@ -14,6 +20,16 @@ public class GenericBuilder<T> {
         this.clazz = clazz;
     }
 
+    /**
+     * The method creates a new instance of the {@link GenericBuilder}.
+     * 
+     * @param clazz
+     *            The parameter determines the type of the instance to be built.
+     * @return An instance of the {@link GenericBuilder} is returned.
+     * @throws GenericBuilderException
+     *             The exception is thrown if an error occurs while creating an
+     *             instance of the class to be built.
+     */
     public static <T> GenericBuilder<T> getInstance(Class<T> clazz) throws GenericBuilderException {
         try {
             return new GenericBuilder<>(clazz);
@@ -22,6 +38,19 @@ public class GenericBuilder<T> {
         }
     }
 
+    /**
+     * The method invokes the method with the passed name and passes the passed
+     * values.
+     * 
+     * @param methodName
+     *            The name of the method to be invoked.
+     * @param propertyValues
+     *            The parameters to be passed to the invoked method.
+     * @return The {@link GenericBuilder} is returned.
+     * @throws GenericBuilderException
+     *             The exception is thrown if an error occurs while invoking the
+     *             method.
+     */
     public GenericBuilder<T> with(String methodName, Object... propertyValues) throws GenericBuilderException {
         try {
             Class<T>[] parameterTypes = getParameterTypes(propertyValues);
@@ -43,6 +72,11 @@ public class GenericBuilder<T> {
         return parameterTypes;
     }
 
+    /**
+     * The method returns the instance that was built.
+     * 
+     * @return The instance taht was built.
+     */
     public T build() {
         return instance;
     }
