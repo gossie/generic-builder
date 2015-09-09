@@ -1,5 +1,6 @@
 package de.gmcs.builder;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -23,10 +24,7 @@ public class GenericBuilder<T> {
 
     public GenericBuilder<T> with(String methodName, Object... propertyValues) throws GenericBuilderException {
         try {
-            Class<Object>[] parameterTypes = new Class[propertyValues.length];
-            for (int i = 0; i < propertyValues.length; i++) {
-                parameterTypes[i] = (Class<Object>) propertyValues[i].getClass();
-            }
+            Class<T>[] parameterTypes = getParameterTypes(propertyValues);
 
             Method method = clazz.getMethod(methodName, parameterTypes);
             method.invoke(instance, propertyValues);
@@ -34,6 +32,15 @@ public class GenericBuilder<T> {
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             throw new GenericBuilderException(e);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    protected Class<T>[] getParameterTypes(Object... propertyValues) {
+        Class<T>[] parameterTypes = (Class<T>[]) Array.newInstance(Class.class, propertyValues.length);
+        for (int i = 0; i < propertyValues.length; i++) {
+            parameterTypes[i] = (Class<T>) propertyValues[i].getClass();
+        }
+        return parameterTypes;
     }
 
     public T build() {
