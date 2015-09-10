@@ -72,5 +72,4 @@ public class GenericBuilderTest {
     public void testPrivateConstructor() throws Exception {
         GenericBuilder.getInstance(PrivateObject.class);
     }
-
 }
