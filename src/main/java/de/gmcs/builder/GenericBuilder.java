@@ -21,24 +21,6 @@ public class GenericBuilder<T> {
     }
 
     /**
-     * The method creates a new instance of the {@link GenericBuilder}.
-     * 
-     * @param clazz
-     *            The parameter determines the type of the instance to be built.
-     * @return An instance of the {@link GenericBuilder} is returned.
-     * @throws GenericBuilderException
-     *             The exception is thrown if an error occurs while creating an
-     *             instance of the class to be built.
-     */
-    public static <T> GenericBuilder<T> getInstance(Class<T> clazz) throws GenericBuilderException {
-        try {
-            return new GenericBuilder<>(clazz, clazz.newInstance());
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new GenericBuilderException(e);
-        }
-    }
-
-    /**
      * The method created a new instance of the {@link GenericBuilder}.
      * 
      * @param clazz
@@ -55,28 +37,6 @@ public class GenericBuilder<T> {
         try {
             return new GenericBuilder<>(clazz, clazz.getConstructor(getParameterTypes(args)).newInstance(args));
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-            throw new GenericBuilderException(e);
-        }
-    }
-
-    /**
-     * The method created a new instance of the {@link GenericBuilder}.
-     * 
-     * @param clazz
-     *            The parameter determines the type of the instance to be built.
-     * @param factoryMethodName
-     *            The name of the factory method that creates the instance to be
-     *            built.
-     * @return An instance of the {@link GenericBuilder} is returned.
-     * @throws GenericBuilderException
-     *             The exception is thrown if an error occurs while creating an
-     *             instance of the class to be built.
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> GenericBuilder<T> getInstanceFromFactoryMethod(Class<T> clazz, String factoryMethodName) throws GenericBuilderException {
-        try {
-            return new GenericBuilder<T>(clazz, (T) clazz.getMethod(factoryMethodName).invoke(null));
-        } catch (SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
             throw new GenericBuilderException(e);
         }
     }
