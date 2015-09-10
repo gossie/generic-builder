@@ -49,6 +49,11 @@ public class GenericBuilderTest {
     }
 
     @Test(expected = GenericBuilderException.class)
+    public void testMissingFactoryMethod() throws Exception {
+        GenericBuilder.getInstanceFromFactoryMethod(PrivateObject.class, "getInstanceMissing");
+    }
+
+    @Test(expected = GenericBuilderException.class)
     public void testMissingMethod() throws Exception {
         GenericBuilder.getInstance(DomainObject.class)
                 .with("setMissing", "attributeValue")
