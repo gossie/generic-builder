@@ -7,6 +7,16 @@ public class PrivateObject {
     private PrivateObject() {
     }
 
+    public static PrivateObject getInstance() {
+        return new PrivateObject();
+    }
+
+    public static PrivateObject getInstance(String attribute) {
+        PrivateObject object = new PrivateObject();
+        object.setAttribute(attribute);
+        return object;
+    }
+
     public String getAttribute() {
         return attribute;
     }

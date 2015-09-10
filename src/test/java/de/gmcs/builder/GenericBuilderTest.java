@@ -31,6 +31,23 @@ public class GenericBuilderTest {
         assertThat(result.getProperty("property"), is(3));
     }
 
+    @Test
+    public void testFactoryMethod() throws Exception {
+        PrivateObject result = GenericBuilder.getInstanceFromFactoryMethod(PrivateObject.class, "getInstance")
+                .with("setAttribute", "attribute")
+                .build();
+
+        assertThat(result.getAttribute(), is("attribute"));
+    }
+
+    @Test
+    public void testFactoryMethodWithArgs() throws Exception {
+        PrivateObject result = GenericBuilder.getInstanceFromFactoryMethod(PrivateObject.class, "getInstance", "attribute")
+                .build();
+
+        assertThat(result.getAttribute(), is("attribute"));
+    }
+
     @Test(expected = GenericBuilderException.class)
     public void testMissingMethod() throws Exception {
         GenericBuilder.getInstance(DomainObject.class)

@@ -15,14 +15,27 @@ public class GenericBuilder<T> {
     private T instance;
     private Class<T> clazz;
 
-    private GenericBuilder(Class<T> clazz) throws InstantiationException, IllegalAccessException {
-        this.instance = clazz.newInstance();
+    private GenericBuilder(Class<T> clazz, T instance) throws InstantiationException, IllegalAccessException {
+        this.instance = instance;
         this.clazz = clazz;
     }
 
-    private GenericBuilder(Class<T> clazz, Object... args) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-        this.instance = clazz.getConstructor(getParameterTypes(args)).newInstance(args);
-        this.clazz = clazz;
+    /**
+     * The method creates a new instance of the {@link GenericBuilder}.
+     * 
+     * @param clazz
+     *            The parameter determines the type of the instance to be built.
+     * @return An instance of the {@link GenericBuilder} is returned.
+     * @throws GenericBuilderException
+     *             The exception is thrown if an error occurs while creating an
+     *             instance of the class to be built.
+     */
+    public static <T> GenericBuilder<T> getInstance(Class<T> clazz) throws GenericBuilderException {
+        try {
+            return new GenericBuilder<>(clazz, clazz.newInstance());
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new GenericBuilderException(e);
+        }
     }
 
     /**
@@ -40,28 +53,66 @@ public class GenericBuilder<T> {
      */
     public static <T> GenericBuilder<T> getInstance(Class<T> clazz, Object... args) throws GenericBuilderException {
         try {
-            return new GenericBuilder<>(clazz, args);
+            return new GenericBuilder<>(clazz, clazz.getConstructor(getParameterTypes(args)).newInstance(args));
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
             throw new GenericBuilderException(e);
         }
     }
 
     /**
-     * The method creates a new instance of the {@link GenericBuilder}.
+     * The method created a new instance of the {@link GenericBuilder}.
      * 
      * @param clazz
      *            The parameter determines the type of the instance to be built.
+     * @param factoryMethodName
+     *            The name of the factory method that creates the instance to be
+     *            built.
      * @return An instance of the {@link GenericBuilder} is returned.
      * @throws GenericBuilderException
      *             The exception is thrown if an error occurs while creating an
      *             instance of the class to be built.
      */
-    public static <T> GenericBuilder<T> getInstance(Class<T> clazz) throws GenericBuilderException {
+    @SuppressWarnings("unchecked")
+    public static <T> GenericBuilder<T> getInstanceFromFactoryMethod(Class<T> clazz, String factoryMethodName) throws GenericBuilderException {
         try {
-            return new GenericBuilder<>(clazz);
-        } catch (InstantiationException | IllegalAccessException e) {
+            return new GenericBuilder<T>(clazz, (T) clazz.getMethod(factoryMethodName).invoke(null));
+        } catch (SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
             throw new GenericBuilderException(e);
         }
+    }
+
+    /**
+     * The method created a new instance of the {@link GenericBuilder}.
+     * 
+     * @param clazz
+     *            The parameter determines the type of the instance to be built.
+     * @param factoryMethodName
+     *            The name of the factory method that creates the instance to be
+     *            built.
+     * @param args
+     *            The arguments that are passed to the factory method that
+     *            creates the instance to be build.
+     * @return An instance of the {@link GenericBuilder} is returned.
+     * @throws GenericBuilderException
+     *             The exception is thrown if an error occurs while creating an
+     *             instance of the class to be built.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> GenericBuilder<T> getInstanceFromFactoryMethod(Class<T> clazz, String factoryMethodName, Object... args) throws GenericBuilderException {
+        try {
+            return new GenericBuilder<T>(clazz, (T) clazz.getMethod(factoryMethodName, getParameterTypes(args)).invoke(null, args));
+        } catch (SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
+            throw new GenericBuilderException(e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> Class<T>[] getParameterTypes(Object... propertyValues) {
+        Class<T>[] parameterTypes = (Class<T>[]) Array.newInstance(Class.class, propertyValues.length);
+        for (int i = 0; i < propertyValues.length; i++) {
+            parameterTypes[i] = (Class<T>) propertyValues[i].getClass();
+        }
+        return parameterTypes;
     }
 
     /**
@@ -87,15 +138,6 @@ public class GenericBuilder<T> {
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             throw new GenericBuilderException(e);
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    protected Class<T>[] getParameterTypes(Object... propertyValues) {
-        Class<T>[] parameterTypes = (Class<T>[]) Array.newInstance(Class.class, propertyValues.length);
-        for (int i = 0; i < propertyValues.length; i++) {
-            parameterTypes[i] = (Class<T>) propertyValues[i].getClass();
-        }
-        return parameterTypes;
     }
 
     /**
