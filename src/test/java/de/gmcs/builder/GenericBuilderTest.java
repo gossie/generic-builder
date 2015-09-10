@@ -13,18 +13,20 @@ public class GenericBuilderTest {
     @Test
     public void test() throws Exception {
         DomainObject result = GenericBuilder.getInstance(DomainObject.class)
-                .with("setAttribute", "attributeValue")
-                .with("setProperty", "property", Integer.valueOf(3))
+                .set("attribute", "attributeValue")
+                .invoke("setProperty", "property", Integer.valueOf(3))
+                .invoke("perform")
                 .build();
 
         assertThat(result.getAttribute(), is("attributeValue"));
         assertThat(result.getProperty("property"), is(3));
+        assertThat(result.getPerformCounter(), is(1));
     }
 
     @Test
     public void testParametrizedConstructor() throws Exception {
         DomainObject result = GenericBuilder.getInstance(DomainObject.class, "attributeValue")
-                .with("setProperty", "property", Integer.valueOf(3))
+                .invoke("setProperty", "property", Integer.valueOf(3))
                 .build();
 
         assertThat(result.getAttribute(), is("attributeValue"));
@@ -34,7 +36,7 @@ public class GenericBuilderTest {
     @Test
     public void testFactoryMethod() throws Exception {
         PrivateObject result = GenericBuilder.getInstanceFromFactoryMethod(PrivateObject.class, "getInstance")
-                .with("setAttribute", "attribute")
+                .invoke("setAttribute", "attribute")
                 .build();
 
         assertThat(result.getAttribute(), is("attribute"));
@@ -56,7 +58,7 @@ public class GenericBuilderTest {
     @Test(expected = GenericBuilderException.class)
     public void testMissingMethod() throws Exception {
         GenericBuilder.getInstance(DomainObject.class)
-                .with("setMissing", "attributeValue")
+                .invoke("setMissing", "attributeValue")
                 .build();
     }
 

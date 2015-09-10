@@ -6,6 +6,7 @@ import java.util.Map;
 public class DomainObject {
 
     private String attribute;
+    private int performCounter;
     private Map<String, Integer> properties = new HashMap<>();
 
     public DomainObject() {
@@ -14,6 +15,7 @@ public class DomainObject {
 
     public DomainObject(String attribute) {
         this.attribute = attribute;
+        this.performCounter = 0;
     }
 
     public String getAttribute() {
@@ -30,5 +32,13 @@ public class DomainObject {
 
     public Integer getProperty(String key) {
         return properties.get(key);
+    }
+
+    public void perform() {
+        ++performCounter;
+    }
+
+    public int getPerformCounter() {
+        return performCounter;
     }
 }

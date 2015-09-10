@@ -88,7 +88,7 @@ public class GenericBuilder<T> {
      *             The exception is thrown if an error occurs while invoking the
      *             method.
      */
-    public GenericBuilder<T> with(String methodName, Object... propertyValues) throws GenericBuilderException {
+    public GenericBuilder<T> invoke(String methodName, Object... propertyValues) throws GenericBuilderException {
         try {
             Class<T>[] parameterTypes = getParameterTypes(propertyValues);
 
@@ -98,6 +98,24 @@ public class GenericBuilder<T> {
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             throw new GenericBuilderException(e);
         }
+    }
+
+    /**
+     * The method assumes that a setter method for the passed property exists
+     * and calls it with the passed value.
+     * 
+     * @param property
+     *            The property to be set.
+     * @param value
+     *            The value to set.
+     * @return The {@link GenericBuilder} is returned.
+     * @throws GenericBuilderException
+     *             The exception is thrown if an error occurs while invoking the
+     *             method.
+     */
+    public GenericBuilder<T> set(String property, Object value) throws GenericBuilderException {
+        String methodName = "set" + String.valueOf(property.charAt(0)).toUpperCase() + property.substring(1);
+        return invoke(methodName, value);
     }
 
     /**
