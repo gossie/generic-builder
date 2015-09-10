@@ -8,6 +8,14 @@ public class DomainObject {
     private String attribute;
     private Map<String, Integer> properties = new HashMap<>();
 
+    public DomainObject() {
+        this("");
+    }
+
+    public DomainObject(String attribute) {
+        this.attribute = attribute;
+    }
+
     public String getAttribute() {
         return attribute;
     }

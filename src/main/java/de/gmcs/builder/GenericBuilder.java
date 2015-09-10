@@ -20,6 +20,32 @@ public class GenericBuilder<T> {
         this.clazz = clazz;
     }
 
+    private GenericBuilder(Class<T> clazz, Object... args) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        this.instance = clazz.getConstructor(getParameterTypes(args)).newInstance(args);
+        this.clazz = clazz;
+    }
+
+    /**
+     * The method created a new instance of the {@link GenericBuilder}.
+     * 
+     * @param clazz
+     *            The parameter determines the type of the instance to be built.
+     * @param args
+     *            The arguments that are passed to the constructor that creates
+     *            the instance to be build.
+     * @return An instance of the {@link GenericBuilder} is returned.
+     * @throws GenericBuilderException
+     *             The exception is thrown if an error occurs while creating an
+     *             instance of the class to be built.
+     */
+    public static <T> GenericBuilder<T> getInstance(Class<T> clazz, Object... args) throws GenericBuilderException {
+        try {
+            return new GenericBuilder<>(clazz, args);
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+            throw new GenericBuilderException(e);
+        }
+    }
+
     /**
      * The method creates a new instance of the {@link GenericBuilder}.
      * 

@@ -21,6 +21,16 @@ public class GenericBuilderTest {
         assertThat(result.getProperty("property"), is(3));
     }
 
+    @Test
+    public void testParametrizedConstructor() throws Exception {
+        DomainObject result = GenericBuilder.getInstance(DomainObject.class, "attributeValue")
+                .with("setProperty", "property", Integer.valueOf(3))
+                .build();
+
+        assertThat(result.getAttribute(), is("attributeValue"));
+        assertThat(result.getProperty("property"), is(3));
+    }
+
     @Test(expected = GenericBuilderException.class)
     public void testMissingMethod() throws Exception {
         GenericBuilder.getInstance(DomainObject.class)
