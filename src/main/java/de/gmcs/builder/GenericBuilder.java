@@ -121,7 +121,7 @@ public class GenericBuilder<T> {
     /**
      * The method returns the instance that was built.
      * 
-     * @return The instance taht was built.
+     * @return The instance that was built.
      */
     public T build() {
         return instance;
