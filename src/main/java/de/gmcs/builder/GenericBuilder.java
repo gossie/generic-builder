@@ -12,12 +12,12 @@ import java.lang.reflect.Method;
  */
 public class GenericBuilder<T> {
 
-    private T instance;
     private Class<T> clazz;
+    private T instance;
 
     private GenericBuilder(Class<T> clazz, T instance) throws InstantiationException, IllegalAccessException {
-        this.instance = instance;
         this.clazz = clazz;
+        this.instance = instance;
     }
 
     /**
