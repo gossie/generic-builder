@@ -6,6 +6,7 @@ import java.util.Map;
 public class DomainObject {
 
     private String attribute;
+    private String unsettableAttribute;
     private int performCounter;
     private Map<String, Integer> properties = new HashMap<>();
 
@@ -40,5 +41,9 @@ public class DomainObject {
 
     public int getPerformCounter() {
         return performCounter;
+    }
+
+    public String getUnsettableAttribute() {
+        return unsettableAttribute;
     }
 }

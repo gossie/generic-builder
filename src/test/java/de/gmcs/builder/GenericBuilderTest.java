@@ -14,11 +14,13 @@ public class GenericBuilderTest {
     public void test() throws Exception {
         DomainObject result = GenericBuilder.getInstance(DomainObject.class)
                 .set("attribute", "attributeValue")
+                .set("unsettableAttribute", "unsettableAttributeValue")
                 .invoke("setProperty", "property", Integer.valueOf(3))
                 .invoke("perform")
                 .build();
 
         assertThat(result.getAttribute(), is("attributeValue"));
+        assertThat(result.getUnsettableAttribute(), is("unsettableAttributeValue"));
         assertThat(result.getProperty("property"), is(3));
         assertThat(result.getPerformCounter(), is(1));
     }

@@ -1,6 +1,7 @@
 package de.gmcs.builder;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -102,7 +103,8 @@ public class GenericBuilder<T> {
 
     /**
      * The method assumes that a setter method for the passed property exists
-     * and calls it with the passed value.
+     * and calls it with the passed value. If no setter is found, the method
+     * sets the attribute with the passed name directly.
      * 
      * @param property
      *            The property to be set.
@@ -115,7 +117,22 @@ public class GenericBuilder<T> {
      */
     public GenericBuilder<T> set(String property, Object value) throws GenericBuilderException {
         String methodName = "set" + String.valueOf(property.charAt(0)).toUpperCase() + property.substring(1);
-        return invoke(methodName, value);
+        try {
+            return invoke(methodName, value);
+        } catch (GenericBuilderException e) {
+            return setAttributeValue(property, value);
+        }
+    }
+
+    private GenericBuilder<T> setAttributeValue(String property, Object value) {
+        try {
+            Field field = clazz.getDeclaredField(property);
+            field.setAccessible(true);
+            field.set(instance, value);
+            return this;
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e1) {
+            throw new GenericBuilderException(e1);
+        }
     }
 
     /**
