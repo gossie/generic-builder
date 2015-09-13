@@ -29,6 +29,8 @@ public class GenericBuilder<T> {
      * @param args
      *            The arguments that are passed to the constructor that creates
      *            the instance to be build.
+     * @param <T>
+     *            The type of the instance to be built.
      * @return An instance of the {@link GenericBuilder} is returned.
      * @throws GenericBuilderException
      *             The exception is thrown if an error occurs while creating an
@@ -53,6 +55,8 @@ public class GenericBuilder<T> {
      * @param args
      *            The arguments that are passed to the factory method that
      *            creates the instance to be build.
+     * @param <T>
+     *            The type of the instance to be built.
      * @return An instance of the {@link GenericBuilder} is returned.
      * @throws GenericBuilderException
      *             The exception is thrown if an error occurs while creating an
