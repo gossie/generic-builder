@@ -11,7 +11,7 @@ import de.gmcs.builder.model.PrivateObject;
 public class GenericBuilderTest {
 
     @Test
-    public void test() throws Exception {
+    public void testAll() throws Exception {
         DomainObject result = GenericBuilder.getInstance(DomainObject.class)
                 .set("attribute", "attributeValue")
                 .set("unsettableAttribute", "unsettableAttributeValue")
