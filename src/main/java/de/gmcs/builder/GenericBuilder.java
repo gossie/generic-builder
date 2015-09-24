@@ -16,7 +16,7 @@ public class GenericBuilder<T> {
     private Class<T> clazz;
     private T instance;
 
-    private GenericBuilder(Class<T> clazz, T instance) throws InstantiationException, IllegalAccessException {
+    private GenericBuilder(Class<T> clazz, T instance) {
         this.clazz = clazz;
         this.instance = instance;
     }
@@ -66,7 +66,7 @@ public class GenericBuilder<T> {
     public static <T> GenericBuilder<T> getInstanceFromFactoryMethod(Class<T> clazz, String factoryMethodName, Object... args) throws GenericBuilderException {
         try {
             return new GenericBuilder<T>(clazz, (T) clazz.getMethod(factoryMethodName, getParameterTypes(args)).invoke(null, args));
-        } catch (SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
+        } catch (SecurityException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
             throw new GenericBuilderException(e);
         }
     }
